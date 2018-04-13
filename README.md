@@ -28,8 +28,8 @@ So here we are.
 
 ## Example
 
-```sh
-Right (cmd:args) <- parse "some -complex --command=\"Line And\" 'More'
+```haskell
+Right (cmd:args) <- parse "some -complex --command=\"Line And\" 'More'"
 
 callProcess cmd args
 --
