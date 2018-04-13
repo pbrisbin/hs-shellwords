@@ -19,6 +19,8 @@ ghc-options: -Wall
 
 library:
   source-dirs: src
+  dependencies:
+    - megaparsec
 
 tests:
   hspec:
