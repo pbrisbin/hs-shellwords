@@ -6,6 +6,7 @@ module ShellWords
 
 import Data.Bifunctor (first)
 import Data.Char
+import Data.Maybe (fromMaybe)
 import Data.Semigroup ((<>))
 import Data.Text (Text)
 import Data.Text as T
@@ -23,12 +24,7 @@ parser :: Parser [Text]
 parser = shellword `sepBy` space1
 
 shellword :: Parser Text
-shellword = choice
-    [ quoted
-    , try quotedFlag -- N.B. may fail after consuming "--"
-    , flagArgument
-    , value
-    ]
+shellword = choice [quoted, shelloption, value]
 
 -- | A balanced, single- or double-quoted string
 quoted :: Parser Text
@@ -36,26 +32,25 @@ quoted = do
     q <- oneOf ['\'', '\"']
     T.pack <$> manyTill (try (escaped q) <|> anyToken) (char q)
 
--- | This wierd case: @--\"foo bar\"@
-quotedFlag :: Parser Text
-quotedFlag = (<>)
-    <$> flagPrefix
-    <*> quoted
+-- | A flag, with or without an argument
+shelloption :: Parser Text
+shelloption = (<>)
+    <$> flag
+    <*> (fromMaybe "" <$> optional argument)
 
--- | A flag and (possibly quoted) argument, @--foo=\"bar\"@
-flagArgument :: Parser Text
-flagArgument = concat4
-    <$> flagPrefix
-    <*> (T.pack <$> manyTill anyToken (char '='))
-    <*> pure "="
+-- | A flag like @--foo@, or (apparently) @--\"baz bat\"@
+flag :: Parser Text
+flag = (<>)
+    <$> (string "--" <|> string "-")
+    <*> (quoted <|> (T.pack <$> many (noneOf ['=', ' '])))
+
+-- | The argument to a flag like @=foo@, or @=\"baz bat\"@
+argument :: Parser Text
+argument = (<>)
+    <$> (T.singleton <$> char '=')
     <*> (quoted <|> value)
-  where
-    concat4 a b c d = a <> b <> c <> d
 
-flagPrefix :: Parser Text
-flagPrefix = string "--" <|> string "-"
-
--- | A bare value, here till an (unescaped) space
+-- | A plain value, here till an (unescaped) space
 value :: Parser Text
 value = T.pack <$> many (try (escaped ' ') <|> nonSpace)
 
