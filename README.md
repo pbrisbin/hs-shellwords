@@ -43,13 +43,13 @@ callProcess cmd args
 
 This package is inspired by and named after
 
-- [`python/ShellWords`][python-shellwords], which was itself inspired by
+- [`python-shellwords`][python-shellwords], which was itself inspired by
 - [`go-shellwords`][go-shellwords], which was itself inspired by
-- [`Parser::CommandLine`][parse-commandline]
+- [`Parser::CommandLine`][parser-commandline]
 
 [python-shellwords]: https://github.com/mozillazg/python-shellwords
 [go-shellwords]: https://github.com/mattn/go-shellwords
-[parse-commandline]: https://github.com/Songmu/p5-Parse-CommandLine
+[parser-commandline]: https://github.com/Songmu/p5-Parse-CommandLine
 
 ---
 
