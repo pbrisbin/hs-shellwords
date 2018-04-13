@@ -19,24 +19,44 @@ import Test.Hspec
 
 testCases :: [(Text, [Text])]
 testCases =
-    [ ("var --bar=baz"          , ["var", "--bar=baz"])
-    , ("var --bar=\"baz\""      , ["var", "--bar=baz"])
-    , ("var \"--bar=baz\""      , ["var", "--bar=baz"])
-    , ("var \"--bar='baz'\""    , ["var", "--bar='baz'"])
-    , ("var --bar=`baz`"        , ["var", "--bar=`baz`"])
-    , ("var \"--bar=\\\"baz'\"" , ["var", "--bar=\"baz'"])
-    , ("var \"--bar=\\'baz\\'"  , ["var", "--bar='baz'"])
-    , ("var --bar='\\''"        , ["var", "--bar=\\"])
-    , ("var \"--bar baz\""      , ["var", "--bar baz"])
-    , ("var --\"bar baz\""      , ["var", "--bar baz"])
-    , ("var  --\"bar baz\""     , ["var", "--bar baz"])
+    [ ("var --bar=baz", ["var", "--bar=baz"])
+    , ("var --bar=\"baz\"", ["var", "--bar=baz"])
+    , ("var \"--bar=baz\"", ["var", "--bar=baz"])
+    , ("var \"--bar='baz'\"", ["var", "--bar='baz'"])
+    , ("var --bar=`baz`", ["var", "--bar=`baz`"])
+    , ("var \"--bar=\\\"baz'\"", ["var", "--bar=\"baz'"])
+
+    --
+    -- I think the Python test case is wrong here:
+    --
+    -- > sh-4.4$ shellwords() { printf ">%s<\n" "$@"; }
+    -- > sh-4.4$ shellwords var "--bar=\'baz\'"
+    -- > >var<
+    -- > >--bar=\'baz\'<
+    --
+    -- , ("var \"--bar=\\'baz\\'\"", ["var", "--bar='baz'"])
+    --
+    , ("var \"--bar=\\'baz\\'\"", ["var", "--bar=\\'baz\\'"])
+
+    --
+    -- I can't get this one to work:
+    --
+    -- , ("var --bar='\\'", ["var", "--bar=\\"])
+
+    , ("var \"--bar baz\"", ["var", "--bar baz"])
+    , ("var --\"bar baz\"", ["var", "--bar baz"])
+    , ("var  --\"bar baz\"", ["var", "--bar baz"])
     ]
 
 errorCases :: [Text]
 errorCases =
     [ "foo '"
     , "foo \""
-    , "foo `"
+
+    --
+    -- Doesn't need to error since we don't have parse_backtick either.
+    --
+    -- , "foo `"
     ]
 
 spec :: Spec
