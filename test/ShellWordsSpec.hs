@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 -- |
 --
 -- Case-for-case port from Python:
@@ -9,10 +11,13 @@ module ShellWordsSpec
     ) where
 
 import Data.Foldable (for_)
+import Data.Semigroup ((<>))
+import Data.Text (Text)
+import qualified Data.Text as T
 import ShellWords
 import Test.Hspec
 
-testCases :: [(String, [String])]
+testCases :: [(Text, [Text])]
 testCases =
     [ ("var --bar=baz"          , ["var", "--bar=baz"])
     , ("var --bar=\"baz\""      , ["var", "--bar=baz"])
@@ -27,7 +32,7 @@ testCases =
     , ("var  --\"bar baz\""     , ["var", "--bar baz"])
     ]
 
-errorCases :: [String]
+errorCases :: [Text]
 errorCases =
     [ "foo '"
     , "foo \""
@@ -37,11 +42,11 @@ errorCases =
 spec :: Spec
 spec = describe "parse" $ do
     for_ testCases $ \(input, expected) -> do
-        it ("parses |" ++ input ++ "| correctly") $ do
+        it (T.unpack $ "parses |" <> input <> "| correctly") $ do
             parse input `shouldBe` Right expected
 
     for_ errorCases $ \input -> do
-        it ("errors on |" ++ input ++ "|") $ do
+        it (T.unpack $ "errors on |" <> input <> "|") $ do
             parse input `shouldSatisfy` isLeft
 
 isLeft :: Either a b -> Bool

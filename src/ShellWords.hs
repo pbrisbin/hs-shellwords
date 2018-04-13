@@ -2,5 +2,10 @@ module ShellWords
     ( parse
     ) where
 
-parse :: String -> Either String [String]
-parse = Right . words
+import Data.Text (Text)
+import qualified Data.Text as T
+
+type ParseError = Text
+
+parse :: Text -> Either ParseError [Text]
+parse = Right . T.words
