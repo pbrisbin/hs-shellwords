@@ -4,7 +4,6 @@ module ShellWords
     ( parse
     ) where
 
---import Control.Monad (void)
 import Data.Bifunctor (first)
 import Data.Char
 import Data.Semigroup ((<>))
