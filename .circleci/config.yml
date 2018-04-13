@@ -1,0 +1,35 @@
+---
+version: 2.0
+
+jobs:
+  build:
+    docker:
+      - image: fpco/stack-build:lts
+    steps:
+      - checkout
+      - run:
+          name: Digest
+          command: |
+            git ls-files | xargs md5sum > digest
+      - restore_cache:
+          keys:
+            - v0--
+            - v0--
+            - v0-master-
+      - run:
+          name: Dependencies
+          command: make setup
+      - run:
+          name: Build
+          command: make build
+      - save_cache:
+          key: v2--
+          paths:
+            - ~/.stack
+            - ./.stack-work
+      - run:
+          name: Test
+          command: make test
+      - run:
+          name: Lint
+          command: make lint
