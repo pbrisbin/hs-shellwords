@@ -13,8 +13,8 @@ jobs:
             git ls-files | xargs md5sum > digest
       - restore_cache:
           keys:
-            - v0--
-            - v0--
+            - v0-{{ .Branch }}-{{ checksum "digest" }}
+            - v0-{{ .Branch }}-
             - v0-master-
       - run:
           name: Dependencies
@@ -23,7 +23,7 @@ jobs:
           name: Build
           command: make build
       - save_cache:
-          key: v2--
+          key: v0-{{ .Branch }}-{{ checksum "digest" }}
           paths:
             - ~/.stack
             - ./.stack-work

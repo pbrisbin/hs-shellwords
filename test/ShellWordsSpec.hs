@@ -1,54 +1,54 @@
+-- |
+--
+-- Case-for-case port from Python:
+--
+-- <https://github.com/mozillazg/python-shellwords/blob/master/tests/test_shellwords.py>
+--
 module ShellWordsSpec
     ( spec
     ) where
 
+import Data.Foldable (for_)
 import ShellWords
 import Test.Hspec
 
+testCases :: [(String, [String])]
+testCases =
+    [ ("var --bar=baz"          , ["var", "--bar=baz"])
+    , ("var --bar=\"baz\""      , ["var", "--bar=baz"])
+    , ("var \"--bar=baz\""      , ["var", "--bar=baz"])
+    , ("var \"--bar='baz'\""    , ["var", "--bar='baz'"])
+    , ("var --bar=`baz`"        , ["var", "--bar=`baz`"])
+    , ("var \"--bar=\\\"baz'\"" , ["var", "--bar=\"baz'"])
+    , ("var \"--bar=\\'baz\\'"  , ["var", "--bar='baz'"])
+    , ("var --bar='\\''"        , ["var", "--bar=\\"])
+    , ("var \"--bar baz\""      , ["var", "--bar baz"])
+    , ("var --\"bar baz\""      , ["var", "--bar baz"])
+    , ("var  --\"bar baz\""     , ["var", "--bar baz"])
+    ]
+
+errorCases :: [String]
+errorCases =
+    [ "foo '"
+    , "foo \""
+    , "foo `"
+    ]
+
 spec :: Spec
-spec = undefined
+spec = describe "parse" $ do
+    for_ testCases $ \(input, expected) -> do
+        it ("parses |" ++ input ++ "| correctly") $ do
+            parse input `shouldBe` Right expected
 
-{-
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, print_function, unicode_literals
-import os
+    for_ errorCases $ \input -> do
+        it ("errors on |" ++ input ++ "|") $ do
+            parse input `shouldSatisfy` isLeft
 
-from shellwords import ShellWords, shell_run
+isLeft :: Either a b -> Bool
+isLeft (Left _) = True
+isLeft _ = False
 
-test_cases = {
-    'var --bar=baz': ['var', '--bar=baz'],
-    'var --bar="baz"': ['var', '--bar=baz'],
-    'var "--bar=baz"': ['var', '--bar=baz'],
-    '''var "--bar='baz'"''': ['var', "--bar='baz'"],
-    "var --bar=`baz`": ['var', "--bar=`baz`"],
-    r'''var "--bar=\"baz'"''': ['var', """--bar="baz'"""],
-    r'''var "--bar=\'baz\'"''': ['var', "--bar='baz'"],
-    r"var --bar='\'": ['var', "--bar=\\"],
-    'var "--bar baz"': ['var', '--bar baz'],
-    'var --"bar baz"': ['var', '--bar baz'],
-    'var  --"bar baz"': ['var', '--bar baz'],
-}
-
-
-def test_simple():
-    s = ShellWords()
-    for (line, expected) in test_cases.items():
-        print(repr(line))
-        args = s.parse(line)
-        assert args == expected
-
-
-def test_error():
-    s = ShellWords()
-    for x in ["foo '", 'foo "', "foo `"]:
-        try:
-            s.parse(x)
-        except:
-            pass
-        else:
-            raise Exception("Should be an error")
-
+{- Features I'm not sure I'll be porting, certainly not yet.
 
 def test_backtick():
     goversion, err = shell_run("go version")
@@ -69,7 +69,6 @@ def test_backtick_error():
         pass
     else:
         raise Exception("Should be an error")
-
 
 def test_env():
     os.environ["FOO"] = "bar"

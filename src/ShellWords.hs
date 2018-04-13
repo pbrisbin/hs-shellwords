@@ -2,5 +2,5 @@ module ShellWords
     ( parse
     ) where
 
-parse :: String -> [String]
-parse = undefined
+parse :: String -> Either String [String]
+parse = Right . words
