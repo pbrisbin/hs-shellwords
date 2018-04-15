@@ -10,11 +10,13 @@ setup:
 .PHONY: build
 build:
 	stack build \
+	  --coverage \
 	  --fast --pedantic --test --no-run-tests
 
 .PHONY: test
 test:
 	stack build \
+	  --coverage \
 	  --fast --pedantic --test
 
 .PHONY: lint
