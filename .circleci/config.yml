@@ -33,3 +33,6 @@ jobs:
       - run:
           name: Lint
           command: make lint
+      - run:
+          name: Upload Coverage
+          command: make cc-coverage
