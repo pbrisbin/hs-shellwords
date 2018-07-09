@@ -4,8 +4,14 @@ all: setup build test lint
 setup:
 	stack setup
 	stack build \
+	  --coverage \
 	  --dependencies-only --test --no-run-tests
-	stack install hlint weeder
+	stack install --copy-compiler-tool \
+	  brittany \
+	  fast-tags \
+	  hlint \
+	  stylish-haskell \
+	  weeder
 
 .PHONY: build
 build:
@@ -21,8 +27,8 @@ test:
 
 .PHONY: lint
 lint:
-	hlint .
-	weeder .
+	stack exec hlint .
+	stack exec weeder .
 
 .PHONY: clean
 clean:
