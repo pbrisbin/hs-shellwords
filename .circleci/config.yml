@@ -37,7 +37,7 @@ jobs:
       - run:
           name: Lint
           command: |
-            curl -L -O .hlint.yaml \
+            curl -L -o .hlint.yaml \
               https://raw.githubusercontent.com/pbrisbin/dotfiles/master/hlint.yaml
             make lint
       - run:
