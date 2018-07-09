@@ -36,7 +36,10 @@ jobs:
             - ./.stack-work
       - run:
           name: Lint
-          command: make lint
+          command: |
+            curl -L -O .hlint.yaml \
+              https://raw.githubusercontent.com/pbrisbin/dotfiles/master/hlint.yaml
+            make lint
       - run:
           name: Test
           command: |
