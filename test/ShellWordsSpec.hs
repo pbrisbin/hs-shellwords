@@ -12,12 +12,10 @@ module ShellWordsSpec
 
 import Data.Foldable (for_)
 import Data.Semigroup ((<>))
-import Data.Text (Text)
-import qualified Data.Text as T
 import ShellWords
 import Test.Hspec
 
-testCases :: [(Text, [Text])]
+testCases :: [(String, [String])]
 testCases =
     [ ("var --bar=baz", ["var", "--bar=baz"])
     , ("var --bar=\"baz\"", ["var", "--bar=baz"])
@@ -25,7 +23,13 @@ testCases =
     , ("var \"--bar='baz'\"", ["var", "--bar='baz'"])
     , ("var --bar=`baz`", ["var", "--bar=`baz`"])
     , ("var \"--bar=\\\"baz'\"", ["var", "--bar=\"baz'"])
+    , ("var \"--bar=\\'baz\\'\"", ["var", "--bar=\\'baz\\'"])
+    , ("var \"--bar baz\"", ["var", "--bar baz"])
+    , ("var --\"bar baz\"", ["var", "--bar baz"])
+    , ("var  --\"bar baz\"", ["var", "--bar baz"])
+    ]
 
+    -- Omitted cases:
     --
     -- I think the Python test case is wrong here:
     --
@@ -36,19 +40,12 @@ testCases =
     --
     -- , ("var \"--bar=\\'baz\\'\"", ["var", "--bar='baz'"])
     --
-    , ("var \"--bar=\\'baz\\'\"", ["var", "--bar=\\'baz\\'"])
-
     --
     -- I can't get this one to work:
     --
     -- , ("var --bar='\\'", ["var", "--bar=\\"])
 
-    , ("var \"--bar baz\"", ["var", "--bar baz"])
-    , ("var --\"bar baz\"", ["var", "--bar baz"])
-    , ("var  --\"bar baz\"", ["var", "--bar baz"])
-    ]
-
-errorCases :: [Text]
+errorCases :: [String]
 errorCases =
     [ "foo '"
     , "foo \""
@@ -62,11 +59,11 @@ errorCases =
 spec :: Spec
 spec = describe "parse" $ do
     for_ testCases $ \(input, expected) -> do
-        it (T.unpack $ "parses |" <> input <> "| correctly") $ do
+        it ("parses |" <> input <> "| correctly") $ do
             parse input `shouldBe` Right expected
 
     for_ errorCases $ \input -> do
-        it (T.unpack $ "errors on |" <> input <> "|") $ do
+        it ("errors on |" <> input <> "|") $ do
             parse input `shouldSatisfy` isLeft
 
 isLeft :: Either a b -> Bool
