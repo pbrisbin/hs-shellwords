@@ -56,7 +56,7 @@ argument = (:) <$> char '=' <*> (quoted <|> value)
 
 -- | A plain value, here till an (unescaped) space
 value :: Parser String
-value = many (try (escaped ' ') <|> nonSpace)
+value = many nonSpace
 
 escaped :: Char -> Parser Char
 escaped c = c <$ string ("\\" <> [c])
@@ -65,4 +65,4 @@ anyToken :: Parser Char
 anyToken = satisfy $ const True
 
 nonSpace :: Parser Char
-nonSpace = satisfy $ not . isSpace
+nonSpace = escaped ' ' <|> satisfy (not . isSpace)
