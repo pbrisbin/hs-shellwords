@@ -66,6 +66,9 @@ spec = describe "parse" $ do
         it ("errors on |" <> input <> "|") $ do
             parse input `shouldSatisfy` isLeft
 
+    it "strips its input" $ do
+        parse "-LC:/X -ltag\n" `shouldBe` Right ["-LC:/X", "-ltag"]
+
 isLeft :: Either a b -> Bool
 isLeft (Left _) = True
 isLeft _ = False

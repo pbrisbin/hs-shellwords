@@ -19,7 +19,9 @@ import Text.Megaparsec.Char
 type Parser = Parsec Void String
 
 parse :: String -> Either String [String]
-parse = first parseErrorPretty . Megaparsec.parse parser "<input>"
+parse = first parseErrorPretty . Megaparsec.parse parser "<input>" . strip
+  where
+    strip = let f = reverse . dropWhile isSpace in f . f
 
 -- | Parse and return @'Text'@ values
 parseText :: Text -> Either String [Text]
