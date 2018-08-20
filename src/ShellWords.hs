@@ -48,7 +48,7 @@ flag :: Parser String
 flag =
     (<>)
         <$> (string "--" <|> string "-")
-        <*> (quoted <|> many (noneOf ['=', ' ']))
+        <*> (quoted <|> many (nonSpaceOr '='))
 
 -- | The argument to a flag like @=foo@, or @=\"baz bat\"@
 argument :: Parser String
@@ -66,3 +66,11 @@ anyToken = satisfy $ const True
 
 nonSpace :: Parser Char
 nonSpace = escaped ' ' <|> satisfy (not . isSpace)
+
+nonSpaceOr :: Char -> Parser Char
+nonSpaceOr c = escaped ' ' <|> escaped c <|> satisfy (not . isSpaceOrChar)
+  where
+    isSpaceOrChar c'
+        | isSpace c' = True
+        | c' == c = True
+        | otherwise = False

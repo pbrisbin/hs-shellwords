@@ -26,7 +26,22 @@ testCases =
     , ("var \"--bar=\\'baz\\'\"", ["var", "--bar=\\'baz\\'"])
     , ("var \"--bar baz\"", ["var", "--bar baz"])
     , ("var --\"bar baz\"", ["var", "--bar baz"])
-    , ("var  --\"bar baz\"", ["var", "--bar baz"])
+    , ("var --\"bar baz\"", ["var", "--bar baz"])
+
+    -- Additional test cases for whitespace
+    , ("var --bar=baz ", ["var", "--bar=baz"])
+    , (" var --bar=baz ", ["var", "--bar=baz"])
+    , (" var   --bar=baz ", ["var", "--bar=baz"])
+
+    -- Additional test cases for escaped spaces
+    , ("var --bar\\ baz", ["var", "--bar baz"])
+    , ("var --bar=baz\\ bat", ["var", "--bar=baz bat"])
+    , ("var --bar baz\\ bat", ["var", "--bar", "baz bat"])
+
+    -- N.B. sh preserves escapes in quoted values, python-shellwords does not.
+    -- we behave like sh in this regard. See omitted cases below too.
+    , ("var --bar 'baz\\ bat'", ["var", "--bar", "baz\\ bat"])
+    , ("var  --bar \"baz\\ bat\"", ["var", "--bar", "baz\\ bat"])
     ]
 
     -- Omitted cases:
@@ -66,8 +81,14 @@ spec = describe "parse" $ do
         it ("errors on |" <> input <> "|") $ do
             parse input `shouldSatisfy` isLeft
 
-    it "strips its input" $ do
-        parse "-LC:/X -ltag\n" `shouldBe` Right ["-LC:/X", "-ltag"]
+    it "fixes #3" $ do
+        let input = "-LC:/Users/Vitor\\ Coimbra/AppData/Local/Programs/stack/x86_64-windows/msys2-20150512/mingw64/lib -ltag\n"
+            expected =
+                [ "-LC:/Users/Vitor Coimbra/AppData/Local/Programs/stack/x86_64-windows/msys2-20150512/mingw64/lib"
+                , "-ltag"
+                ]
+
+        parse input `shouldBe` Right expected
 
 isLeft :: Either a b -> Bool
 isLeft (Left _) = True
