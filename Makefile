@@ -7,10 +7,7 @@ setup:
 	  --coverage \
 	  --dependencies-only --test --no-run-tests
 	stack install --copy-compiler-tool \
-	  brittany \
-	  fast-tags \
 	  hlint \
-	  stylish-haskell \
 	  weeder
 
 .PHONY: build
