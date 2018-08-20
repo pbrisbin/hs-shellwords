@@ -37,7 +37,7 @@ shellword = choice [quoted, shelloption, value]
 quoted :: Parser String
 quoted = do
     q <- oneOf ['\'', '\"']
-    manyTill (try (escaped q) <|> anyToken) (char q)
+    manyTill (escaped q <|> anyToken) $ char q
 
 -- | A flag, with or without an argument
 shelloption :: Parser String
