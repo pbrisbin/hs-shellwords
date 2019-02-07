@@ -5,6 +5,8 @@ jobs:
   build:
     docker:
       - image: quay.io/haskell_works/stack-build-minimal
+    environment:
+      STACK_ARGUMENTS: --no-terminal
     steps:
       - checkout
       - run:
