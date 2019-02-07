@@ -1,6 +1,10 @@
-## [*Unreleased*](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.2.1...master)
+## [*Unreleased*](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.2.2...master)
 
 None
+
+## [v0.1.2.2](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.2.1...v0.1.2.2)
+
+- Require megaparsec-7.0.0 (LTS-13.6/GHC-8.6)
 
 ## [v0.1.2.1](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.2.0...v0.1.2.1)
 
