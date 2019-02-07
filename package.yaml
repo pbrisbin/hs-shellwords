@@ -21,7 +21,7 @@ ghc-options: -Wall
 library:
   source-dirs: src
   dependencies:
-    - megaparsec
+    - megaparsec >= 7.0.0
     - text
 
 tests:
