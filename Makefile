@@ -3,9 +3,7 @@ all: setup build test lint
 .PHONY: setup
 setup:
 	stack setup
-	stack build \
-	  --coverage \
-	  --dependencies-only --test --no-run-tests
+	stack build --dependencies-only --test --no-run-tests
 
 .PHONY: setup.lint
 setup.lint:
