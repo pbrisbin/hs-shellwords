@@ -35,6 +35,4 @@ jobs:
             make lint
       - run:
           name: Test
-          command: |
-            make test
-            tix2cc | ./cc-test-reporter upload-coverage --input -
+          command: make test coverage.report
