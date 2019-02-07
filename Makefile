@@ -36,6 +36,10 @@ lint:
 	stack exec hlint .
 	stack exec weeder .
 
+.PHONY: coverage.report
+coverage.report:
+	stack exec tix2cc | ./cc-test-reporter upload-coverage --input -
+
 .PHONY: clean
 clean:
 	stack clean
