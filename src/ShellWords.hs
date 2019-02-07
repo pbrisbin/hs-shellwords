@@ -43,6 +43,8 @@ quoted = do
 shelloption :: Parser String
 shelloption = (<>) <$> flag <*> (fromMaybe "" <$> optional argument)
 
+-- brittany-disable-next-binding
+
 -- | A flag like @--foo@, or (apparently) @--\"baz bat\"@
 flag :: Parser String
 flag =
