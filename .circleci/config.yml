@@ -18,14 +18,7 @@ jobs:
             - v0-master-
       - run:
           name: Dependencies
-          command: |
-            make setup
-            stack install cc-coverage
-            curl -L "$CC_TEST_REPORTER_SRC" > ./cc-test-reporter
-            chmod +x cc-test-reporter
-          environment:
-            # yamllint disable-line rule:line-length
-            CC_TEST_REPORTER_SRC: https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+          command: make setup setup.lint setup.coverage
       - run:
           name: Build
           command: make build
