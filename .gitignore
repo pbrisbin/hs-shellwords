@@ -1,2 +1,3 @@
 *.cabal
 .stack-work
+cc-test-reporter

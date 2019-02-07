@@ -6,9 +6,20 @@ setup:
 	stack build \
 	  --coverage \
 	  --dependencies-only --test --no-run-tests
+
+.PHONY: setup.lint
+setup.lint:
 	stack install --copy-compiler-tool \
 	  hlint \
 	  weeder
+
+.PHONY: setup.coverage
+setup.coverage:
+	stack install --copy-compiler-tool cc-coverage
+	curl -L \
+	  https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 \
+	  > ./cc-test-reporter
+	  chmod +x cc-test-reporter
 
 .PHONY: build
 build:
