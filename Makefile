@@ -2,18 +2,21 @@ all: setup build test lint
 
 .PHONY: setup
 setup:
-	stack setup
-	stack build --dependencies-only --test --no-run-tests
+	stack setup $(STACK_ARGUMENTS)
+	stack build $(STACK_ARGUMENTS) \
+	  --dependencies-only --test --no-run-tests
 
 .PHONY: setup.lint
 setup.lint:
-	stack install --copy-compiler-tool \
-	  hlint \
-	  weeder
+	stack install $(STACK_ARGUMENTS) \
+	  --copy-compiler-tool \
+	    hlint \
+	    weeder
 
 .PHONY: setup.coverage
 setup.coverage:
-	stack install --copy-compiler-tool cc-coverage
+	stack install $(STACK_ARGUMENTS) \
+	  --copy-compiler-tool cc-coverage
 	curl -L \
 	  https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 \
 	  > ./cc-test-reporter
@@ -21,25 +24,26 @@ setup.coverage:
 
 .PHONY: build
 build:
-	stack build \
+	stack build $(STACK_ARGUMENTS) \
 	  --coverage \
 	  --fast --pedantic --test --no-run-tests
 
 .PHONY: test
 test:
-	stack build \
+	stack build $(STACK_ARGUMENTS) \
 	  --coverage \
 	  --fast --pedantic --test
 
 .PHONY: lint
 lint:
-	stack exec hlint .
-	stack exec weeder .
+	stack exec $(STACK_ARGUMENTS) hlint .
+	stack exec $(STACK_ARGUMENTS) weeder .
 
 .PHONY: coverage.report
 coverage.report:
-	stack exec tix2cc | ./cc-test-reporter upload-coverage --input -
+	stack exec $(STACK_ARGUMENTS) tix2cc \
+	  | ./cc-test-reporter upload-coverage --input -
 
 .PHONY: clean
 clean:
-	stack clean
+	stack $(STACK_ARGUMENTS) clean
