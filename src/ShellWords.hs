@@ -1,4 +1,3 @@
-{-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module ShellWords
@@ -13,20 +12,15 @@ import Data.Char
 import Data.Maybe (fromMaybe)
 import Data.Text (Text, pack, unpack)
 import Data.Void (Void)
-import Text.Megaparsec hiding (parse)
 import qualified Text.Megaparsec as Megaparsec
 import Text.Megaparsec.Char
+import Text.Megaparsec.Compat hiding (parse)
 
 type Parser = Parsec Void String
 
 parse :: String -> Either String [String]
 parse = first errorBundlePretty . Megaparsec.parse parser "<input>" . strip
     where strip = let f = reverse . dropWhile isSpace in f . f
-
-#if !MIN_VERSION_megaparsec(7,0,0)
-errorBundlePretty :: Show a => a -> String
-errorBundlePretty = show
-#endif
 
 -- | Parse and return @'Text'@ values
 parseText :: Text -> Either String [Text]
