@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module ShellWords
@@ -5,12 +6,12 @@ module ShellWords
     , parseText
     ) where
 
+import Prelude
+
 import Data.Bifunctor (first)
 import Data.Char
 import Data.Maybe (fromMaybe)
-import Data.Semigroup ((<>))
-import Data.Text (Text)
-import qualified Data.Text as T
+import Data.Text (Text, pack, unpack)
 import Data.Void (Void)
 import Text.Megaparsec hiding (parse)
 import qualified Text.Megaparsec as Megaparsec
@@ -22,9 +23,14 @@ parse :: String -> Either String [String]
 parse = first errorBundlePretty . Megaparsec.parse parser "<input>" . strip
     where strip = let f = reverse . dropWhile isSpace in f . f
 
+#if !MIN_VERSION_megaparsec(7,0,0)
+errorBundlePretty :: Show a => a -> String
+errorBundlePretty = show
+#endif
+
 -- | Parse and return @'Text'@ values
 parseText :: Text -> Either String [Text]
-parseText = fmap (map T.pack) . parse . T.unpack
+parseText = fmap (map pack) . parse . unpack
 
 parser :: Parser [String]
 parser = shellword `sepBy` space1

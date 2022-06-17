@@ -10,8 +10,9 @@ module ShellWordsSpec
     ( spec
     ) where
 
+import Prelude
+
 import Data.Foldable (for_)
-import Data.Semigroup ((<>))
 import ShellWords
 import Test.Hspec
 
@@ -82,7 +83,8 @@ spec = describe "parse" $ do
             parse input `shouldSatisfy` isLeft
 
     it "fixes #3" $ do
-        let input = "-LC:/Users/Vitor\\ Coimbra/AppData/Local/Programs/stack/x86_64-windows/msys2-20150512/mingw64/lib -ltag\n"
+        let input
+                = "-LC:/Users/Vitor\\ Coimbra/AppData/Local/Programs/stack/x86_64-windows/msys2-20150512/mingw64/lib -ltag\n"
             expected =
                 [ "-LC:/Users/Vitor Coimbra/AppData/Local/Programs/stack/x86_64-windows/msys2-20150512/mingw64/lib"
                 , "-ltag"
