@@ -5,16 +5,16 @@ module ShellWords
     , parseText
     ) where
 
+import Prelude
+
 import Data.Bifunctor (first)
 import Data.Char
 import Data.Maybe (fromMaybe)
-import Data.Semigroup ((<>))
-import Data.Text (Text)
-import qualified Data.Text as T
+import Data.Text (Text, pack, unpack)
 import Data.Void (Void)
-import Text.Megaparsec hiding (parse)
 import qualified Text.Megaparsec as Megaparsec
 import Text.Megaparsec.Char
+import Text.Megaparsec.Compat hiding (parse)
 
 type Parser = Parsec Void String
 
@@ -24,7 +24,7 @@ parse = first errorBundlePretty . Megaparsec.parse parser "<input>" . strip
 
 -- | Parse and return @'Text'@ values
 parseText :: Text -> Either String [Text]
-parseText = fmap (map T.pack) . parse . T.unpack
+parseText = fmap (map pack) . parse . unpack
 
 parser :: Parser [String]
 parser = shellword `sepBy` space1

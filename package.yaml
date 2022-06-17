@@ -1,6 +1,5 @@
----
 name: shellwords
-version: '0.1.2.1'
+version: 0.1.2.1
 synopsis: Parse strings into words, like a shell would
 description: See https://github.com/pbrisbin/hs-shellwords#readme
 category: Text
@@ -9,14 +8,35 @@ maintainer: pbrisbin@gmail.com
 copyright: 2018 Patrick Brisbin
 license: MIT
 github: pbrisbin/hs-shellwords
-extra-source-files:
+
+extra-doc-files:
   - README.md
   - CHANGELOG.md
+
+ghc-options:
+  - -Weverything
+  - -Wno-missing-exported-signatures # re-enables missing-signatures
+  - -Wno-missing-import-lists
+  - -Wno-missing-local-signatures
+  - -Wno-monomorphism-restriction
+  - -Wno-unsafe
+  - -Wno-safe
+
+when:
+  - condition: "impl(ghc >= 9.2)"
+    ghc-options:
+      - -Wno-missing-kind-signatures
+
+  - condition: "impl(ghc >= 8.10)"
+    ghc-options:
+      - -Wno-missing-safe-haskell-mode
+      - -Wno-prepositive-qualified-module
 
 dependencies:
   - base >= 4.7 && <5
 
-ghc-options: -Wall
+default-extensions:
+  - NoImplicitPrelude
 
 library:
   source-dirs: src
