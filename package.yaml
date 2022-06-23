@@ -55,3 +55,4 @@ tests:
     dependencies:
       - hspec
       - shellwords
+      - megaparsec

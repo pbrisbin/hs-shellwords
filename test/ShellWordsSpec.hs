@@ -1,3 +1,4 @@
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 -- |
@@ -15,6 +16,8 @@ import Prelude
 import Data.Foldable (for_)
 import ShellWords
 import Test.Hspec
+import Text.Megaparsec.Char (string)
+import Text.Megaparsec.Compat (between)
 
 testCases :: [(String, [String])]
 testCases =
@@ -73,14 +76,14 @@ errorCases =
     ]
 
 spec :: Spec
-spec = describe "parse" $ do
+spec = describe "parser" $ do
     for_ testCases $ \(input, expected) -> do
         it ("parses |" <> input <> "| correctly") $ do
-            parse input `shouldBe` Right expected
+            runParser parser input `shouldBeParsed` expected
 
     for_ errorCases $ \input -> do
         it ("errors on |" <> input <> "|") $ do
-            parse input `shouldSatisfy` isLeft
+            expectParseError $ runParser parser input
 
     it "fixes #3" $ do
         let input
@@ -90,11 +93,41 @@ spec = describe "parse" $ do
                 , "-ltag"
                 ]
 
-        parse input `shouldBe` Right expected
+        runParser parser input `shouldBeParsed` expected
 
-isLeft :: Either a b -> Bool
-isLeft (Left _) = True
-isLeft _ = False
+    context "delimited" $ do
+        let
+            parseDelimited input =
+                runParser (between (string "FOO=$(") (string ")") parser)
+                    $ "FOO=$("
+                    <> input
+                    <> ")"
+
+        it "parses within delimiters" $ do
+            parseDelimited "echo \"hi\"" `shouldBeParsed` ["echo", "hi"]
+
+        it "handles quoted delimiter" $ do
+            parseDelimited "echo \"hi (quietly)\")"
+                `shouldBeParsed` ["echo", "hi (quietly)"]
+
+        it "works with white space" $ do
+            parseDelimited "  echo \n\"hi\" " `shouldBeParsed` ["echo", "hi"]
+
+        it "works with newlines" $ do
+            parseDelimited "echo \n\"hi\"" `shouldBeParsed` ["echo", "hi"]
+
+        it "works with final newline" $ do
+            parseDelimited "echo \n\"hi\"\n" `shouldBeParsed` ["echo", "hi"]
+
+expectParseError :: Show a => Either String a -> Expectation
+expectParseError = \case
+    Left{} -> pure ()
+    Right a' -> expectationFailure $ "Expected parse error, got:" <> show a'
+
+shouldBeParsed :: (Show a, Eq a) => Either String a -> a -> Expectation
+a `shouldBeParsed` b = case a of
+    Left e -> expectationFailure e
+    Right a' -> a' `shouldBe` b
 
 {- Features I'm not sure I'll be porting, certainly not yet.
 
