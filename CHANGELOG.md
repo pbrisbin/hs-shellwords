@@ -1,6 +1,11 @@
-## [*Unreleased*](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.2.1...master)
+## [*Unreleased*](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.3.0...main)
 
 None
+
+## [v0.1.3.0](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.2.1...v0.1.3.0)
+
+- Define reserved characters, to enable delimited parsing `$(<words)`
+- Export `Parser`-related functions, to enable incorporating in a larger parser
 
 ## [v0.1.2.1](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.2.0...v0.1.2.1)
 
