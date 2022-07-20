@@ -1,6 +1,10 @@
-## [*Unreleased*](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.3.0...main)
+## [*Unreleased*](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.3.1...main)
 
 None
+
+## [v0.1.3.1](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.3.0...v0.1.3.1)
+
+- Fix incorrect lower bound on `base`
 
 ## [v0.1.3.0](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.2.1...v0.1.3.0)
 
