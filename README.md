@@ -10,19 +10,18 @@ untrusted source, you should not give that text as-is to a shell:
 ```hs
 let userInput = "push origin main"
 
-callProcess "sh" ["-c", "git " <> userInput]
+callCommand $ "git " <> userInput
 -- Forward output of the push command...
 ```
 
-But you may be tempted to do this because you want to correctly handle quoting
-and other notoriously-difficult word-splitting problems.
-
-Doing so is a severe security vulnerability:
+You may be tempted to do this because you want to correctly handle quoting and
+other notoriously-difficult word-splitting problems. But doing so is a severe
+security vulnerability:
 
 ```hs
 let userInput = "push origin main; cat /etc/passwd"
 
-callProcess "sh" ["-c", "git " <> userInput]
+callCommand $ "git " <> userInput
 -- Forward output of the push command...
 -- And then dump /etc/passwd. Oops.
 ```
@@ -56,15 +55,33 @@ So here we are.
 ## Example
 
 ```hs
-Right (cmd:args) <- parse "some -complex --command=\"Line And\" 'More'"
+Right args <- parse "some -complex --command=\"Line And\" 'More'"
 
 callProcess cmd args
 --
 -- Is equivalent to:
 --
--- > callProcess "some" ["-complex", "--command=Line And", "More"]
+-- > callProcess cmd ["some", "-complex", "--command=Line And", "More"]
 --
 ```
+
+## Unsafe Usage
+
+The following is a perfectly reasonable thing one might do with this library:
+
+```hs
+Right (cmd:args) <- parse someInput
+
+callProcess cmd args
+```
+
+However, if:
+
+1. `userInput` is un-trusted, and
+1. You do no further validation of what `cmd` can be,
+
+Then this re-introduces the original security vulnerability and, at that point,
+you might as well just pass `userInput` to a shell.
 
 ## Lineage
 
