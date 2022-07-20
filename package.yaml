@@ -33,7 +33,7 @@ when:
       - -Wno-prepositive-qualified-module
 
 dependencies:
-  - base >= 4.7 && <5
+  - base < 5
 
 default-extensions:
   - NoImplicitPrelude

@@ -1,0 +1,69 @@
+cabal-version: 1.18
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           shellwords
+version:        0.1.3.0
+synopsis:       Parse strings into words, like a shell would
+description:    See https://github.com/pbrisbin/hs-shellwords#readme
+category:       Text
+homepage:       https://github.com/pbrisbin/hs-shellwords#readme
+bug-reports:    https://github.com/pbrisbin/hs-shellwords/issues
+author:         Patrick Brisbin
+maintainer:     pbrisbin@gmail.com
+copyright:      2018 Patrick Brisbin
+license:        MIT
+license-file:   LICENSE
+build-type:     Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/pbrisbin/hs-shellwords
+
+library
+  exposed-modules:
+      ShellWords
+      Text.Megaparsec.Compat
+  other-modules:
+      Paths_shellwords
+  hs-source-dirs:
+      src
+  default-extensions:
+      NoImplicitPrelude
+  ghc-options: -Weverything -Wno-missing-exported-signatures -Wno-missing-import-lists -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-unsafe -Wno-safe
+  build-depends:
+      base <5
+    , megaparsec
+    , text
+  if impl(ghc >= 9.2)
+    ghc-options: -Wno-missing-kind-signatures
+  if impl(ghc >= 8.10)
+    ghc-options: -Wno-missing-safe-haskell-mode -Wno-prepositive-qualified-module
+  default-language: Haskell2010
+
+test-suite hspec
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      ShellWordsSpec
+      Paths_shellwords
+  hs-source-dirs:
+      test
+  default-extensions:
+      NoImplicitPrelude
+  ghc-options: -Weverything -Wno-missing-exported-signatures -Wno-missing-import-lists -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-unsafe -Wno-safe -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base <5
+    , hspec
+    , megaparsec
+    , shellwords
+  if impl(ghc >= 9.2)
+    ghc-options: -Wno-missing-kind-signatures
+  if impl(ghc >= 8.10)
+    ghc-options: -Wno-missing-safe-haskell-mode -Wno-prepositive-qualified-module
+  default-language: Haskell2010
