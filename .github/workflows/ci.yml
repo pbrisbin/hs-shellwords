@@ -37,4 +37,5 @@ jobs:
       - uses: haskell/actions/hlint-setup@v2
       - uses: haskell/actions/hlint-run@v2
         with:
+          version: 3.5
           fail-on: warning
