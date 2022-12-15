@@ -1,5 +1,10 @@
 # ShellWords
 
+[![Hackage](https://img.shields.io/hackage/v/shellwords.svg?style=flat)](https://hackage.haskell.org/package/shellwords)
+[![Stackage Nightly](http://stackage.org/package/shellwords/badge/nightly)](http://stackage.org/nightly/package/shellwords)
+[![Stackage LTS](http://stackage.org/package/shellwords/badge/lts)](http://stackage.org/lts/package/shellwords)
+[![CI](https://github.com/pbrisbin/hs-shellwords/actions/workflows/ci.yml/badge.svg)](https://github.com/pbrisbin/hs-shellwords/actions/workflows/ci.yml)
+
 Parse a string into words, like a shell would.
 
 ## Motivation
