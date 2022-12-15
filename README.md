@@ -75,7 +75,7 @@ callProcess cmd args
 The following is a perfectly reasonable thing one might do with this library:
 
 ```hs
-Right (cmd:args) <- parse someInput
+Right (cmd:args) <- parse userInput
 
 callProcess cmd args
 ```
