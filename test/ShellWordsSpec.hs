@@ -10,9 +10,9 @@ module ShellWordsSpec
   ( spec
   ) where
 
-import Prelude
+import Prelude hiding (truncate)
 
-import Data.Foldable (for_)
+import Data.Foldable (for_, traverse_)
 import ShellWords
 import Test.Hspec
 import Text.Megaparsec.Char (string)
@@ -42,11 +42,6 @@ testCases =
     -- we behave like sh in this regard. See omitted cases below too.
     ("var --bar 'baz\\ bat'", ["var", "--bar", "baz\\ bat"])
   , ("var  --bar \"baz\\ bat\"", ["var", "--bar", "baz\\ bat"])
-  , -- Issue #7
-    ("foo=123 bar", ["foo=123", "bar"])
-  , ("foo bar=123 cow", ["foo", "bar=123", "cow"])
-  , ("foo bar'();='bar cow", ["foo", "bar();=bar", "cow"])
-  , ("foo 'ba'\"r\" cow", ["foo", "bar", "cow"])
   ]
 
 -- Omitted cases:
@@ -75,28 +70,37 @@ errorCases =
   -- , "foo `"
   ]
 
+runTestCase :: HasCallStack => String -> [String] -> Spec
+runTestCase input expected =
+  it ("parses |" <> truncate 50 input <> "| correctly") $ do
+    runParser parser input `shouldBeParsed` expected
+ where
+  truncate n x
+    | length x > n = take n x <> "..."
+    | otherwise = x
+
 spec :: Spec
 spec = describe "parser" $ do
-  for_ testCases $ \(input, expected) -> do
-    it ("parses |" <> input <> "| correctly") $ do
-      runParser parser input `shouldBeParsed` expected
+  traverse_ (uncurry runTestCase) testCases
 
   for_ errorCases $ \input -> do
     it ("errors on |" <> input <> "|") $ do
       expectParseError $ runParser parser input
 
-  it "fixes #3" $ do
-    let
-      input =
-        "-LC:/Users/Vitor\\ Coimbra/AppData/Local/Programs/stack/x86_64-windows/msys2-20150512/mingw64/lib -ltag\n"
-      expected =
-        [ "-LC:/Users/Vitor Coimbra/AppData/Local/Programs/stack/x86_64-windows/msys2-20150512/mingw64/lib"
-        , "-ltag"
-        ]
+  context "Issue #3" $ do
+    runTestCase
+      "-LC:/Users/Vitor\\ Coimbra/AppData/Local/Programs/stack/x86_64-windows/msys2-20150512/mingw64/lib -ltag\n"
+      [ "-LC:/Users/Vitor Coimbra/AppData/Local/Programs/stack/x86_64-windows/msys2-20150512/mingw64/lib"
+      , "-ltag"
+      ]
 
-    runParser parser input `shouldBeParsed` expected
+  context "Issue #7" $ do
+    runTestCase "foo=123 bar" ["foo=123", "bar"]
+    runTestCase "foo bar=123 cow" ["foo", "bar=123", "cow"]
+    runTestCase "foo bar'();='bar cow" ["foo", "bar();=bar", "cow"]
+    runTestCase "foo 'ba'\"r\" cow" ["foo", "bar", "cow"]
 
-  context "delimited" $ do
+  context "As part of a larger Parser" $ do
     let parseDelimited input =
           runParser (between (string "FOO=$(") (string ")") parser) $
             "FOO=$("
@@ -119,12 +123,16 @@ spec = describe "parser" $ do
     it "works with final newline" $ do
       parseDelimited "echo \n\"hi\"\n" `shouldBeParsed` ["echo", "hi"]
 
-expectParseError :: Show a => Either String a -> Expectation
+expectParseError :: (Show a, HasCallStack) => Either String a -> Expectation
 expectParseError = \case
   Left {} -> pure ()
   Right a' -> expectationFailure $ "Expected parse error, got:" <> show a'
 
-shouldBeParsed :: (Show a, Eq a) => Either String a -> a -> Expectation
+shouldBeParsed
+  :: (Show a, Eq a, HasCallStack)
+  => Either String a
+  -> a
+  -> Expectation
 a `shouldBeParsed` b = case a of
   Left e -> expectationFailure e
   Right a' -> a' `shouldBe` b
