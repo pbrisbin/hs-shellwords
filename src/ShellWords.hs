@@ -55,6 +55,7 @@ bare = some go
               ]
         )
       <?> "non white space / non reserved character / non quote"
+{-# ANN bare ("HLint: ignore Use &&" :: String) #-}
 
 -- | A balanced, single- or double-quoted string
 quoted :: Parser String
