@@ -1,14 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module ShellWords
-    ( parse
-    , parseText
+  ( parse
+  , parseText
 
     -- * Low-level parser
-    , Parser
-    , runParser
-    , parser
-    ) where
+  , Parser
+  , runParser
+  , parser
+  ) where
 
 import Prelude
 
@@ -39,18 +39,18 @@ parser = fmap (dropWhileEnd null) $ space *> shellword `sepEndBy1` space1
 
 shellword :: Parser String
 shellword =
-    choice
-            [ quoted <?> "quoted string"
-            , shelloption <?> "shell option"
-            , value <?> "bare value"
-            ]
-        <?> "shell word"
+  choice
+    [ quoted <?> "quoted string"
+    , shelloption <?> "shell option"
+    , value <?> "bare value"
+    ]
+    <?> "shell word"
 
 -- | A balanced, single- or double-quoted string
 quoted :: Parser String
 quoted = do
-    q <- oneOf ['\'', '\"']
-    manyTill (escaped q <|> anyToken) $ char q
+  q <- oneOf ['\'', '\"']
+  manyTill (escaped q <|> anyToken) $ char q
 
 -- | A flag, with or without an argument
 shelloption :: Parser String
@@ -61,9 +61,9 @@ shelloption = (<>) <$> flag <*> (fromMaybe "" <$> optional argument)
 -- | A flag like @--foo@, or (apparently) @--\"baz bat\"@
 flag :: Parser String
 flag =
-    (<>)
-        <$> (string "--" <|> string "-")
-        <*> (quoted <|> value)
+  (<>)
+    <$> (string "--" <|> string "-")
+    <*> (quoted <|> value)
 
 -- | The argument to a flag like @=foo@, or @=\"baz bat\"@
 argument :: Parser String
@@ -90,10 +90,10 @@ anyToken = satisfy $ const True
 
 nonSpaceNonReserved :: Parser Char
 nonSpaceNonReserved =
-    escapedSpace
-        <|> escapedAnyOf reserved
-        <|> satisfy (\c -> not $ isSpace c || isReserved c)
-        <?> "non white space / non reserved character"
+  escapedSpace
+    <|> escapedAnyOf reserved
+    <|> satisfy (\c -> not $ isSpace c || isReserved c)
+    <?> "non white space / non reserved character"
 
 isReserved :: Char -> Bool
 isReserved = (`elem` reserved)
