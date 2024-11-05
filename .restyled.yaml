@@ -1,14 +1,4 @@
-remote_files:
-  - url: https://raw.githubusercontent.com/pbrisbin/dotfiles/master/config/brittany/config.yaml
-    path: brittany.yaml
-  - url: https://raw.githubusercontent.com/pbrisbin/dotfiles/master/stylish-haskell.yaml
-    path: .stylish-haskell.yaml
-  - url: https://raw.githubusercontent.com/pbrisbin/dotfiles/master/hlint.yaml
-    path: .hlint.yaml
 restylers:
-  - brittany:
-      include:
-        - "**/*.hs"
-        - "!src/Text/Megaparsec/Compat.hs" # CPP
-  - stylish-haskell
+  - fourmolu
   - hlint
+  - "!stylish-haskell"
