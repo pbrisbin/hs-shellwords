@@ -42,6 +42,11 @@ testCases =
     -- we behave like sh in this regard. See omitted cases below too.
     ("var --bar 'baz\\ bat'", ["var", "--bar", "baz\\ bat"])
   , ("var  --bar \"baz\\ bat\"", ["var", "--bar", "baz\\ bat"])
+  , -- Issue #7
+    ("foo=123 bar", ["foo=123", "bar"])
+  , ("foo bar=123 cow", ["foo", "bar=123", "cow"])
+  , ("foo bar'();='bar cow", ["foo", "bar();=bar", "cow"])
+  , ("foo 'ba'\"r\" cow", ["foo", "bar", "cow"])
   ]
 
 -- Omitted cases:
