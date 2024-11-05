@@ -99,4 +99,4 @@ isReserved :: Char -> Bool
 isReserved = (`elem` reserved)
 
 reserved :: [Char]
-reserved = "();="
+reserved = "();"
