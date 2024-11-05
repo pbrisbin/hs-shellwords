@@ -14,8 +14,6 @@ import Prelude
 
 import Data.Bifunctor (first)
 import Data.Char
-import Data.List (dropWhileEnd)
-import Data.Maybe (fromMaybe)
 import Data.Text (Text, pack, unpack)
 import Data.Void (Void)
 import qualified Text.Megaparsec as Megaparsec
@@ -35,49 +33,43 @@ parseText :: Text -> Either String [Text]
 parseText = fmap (map pack) . parse . unpack
 
 parser :: Parser [String]
-parser = fmap (dropWhileEnd null) $ space *> shellword `sepEndBy1` space1
+parser = space *> shellword `sepEndBy1` space1 <* space
 
 shellword :: Parser String
-shellword =
-  choice
-    [ quoted <?> "quoted string"
-    , shelloption <?> "shell option"
-    , value <?> "bare value"
-    ]
-    <?> "shell word"
+shellword = fmap concat $ some $ bare <|> quoted
+
+-- | A plain value, here till an (unescaped) space or quote
+bare :: Parser String
+bare = some go
+ where
+  go =
+    escapedSpace
+      <|> escapedBackslash
+      <|> escapedAnyOf (reserved <> quotes)
+      <|> satisfy
+        ( \c ->
+            and
+              [ not $ isSpace c
+              , c `notElem` reserved
+              , c `notElem` quotes
+              ]
+        )
+      <?> "non white space / non reserved character / non quote"
 
 -- | A balanced, single- or double-quoted string
 quoted :: Parser String
 quoted = do
   q <- oneOf ['\'', '\"']
-  manyTill (escaped q <|> anyToken) $ char q
-
--- | A flag, with or without an argument
-shelloption :: Parser String
-shelloption = (<>) <$> flag <*> (fromMaybe "" <$> optional argument)
-
--- brittany-disable-next-binding
-
--- | A flag like @--foo@, or (apparently) @--\"baz bat\"@
-flag :: Parser String
-flag =
-  (<>)
-    <$> (string "--" <|> string "-")
-    <*> (quoted <|> value)
-
--- | The argument to a flag like @=foo@, or @=\"baz bat\"@
-argument :: Parser String
-argument = (:) <$> char '=' <*> (quoted <|> value)
-
--- | A plain value, here till an (unescaped) space
-value :: Parser String
-value = many nonSpaceNonReserved
+  manyTill (escapedBackslash <|> escaped q <|> anyToken) $ char q
 
 escaped :: Char -> Parser Char
 escaped c = c <$ (escapedSatisfy (== c) <?> "escaped" <> show c)
 
 escapedSpace :: Parser Char
 escapedSpace = escapedSatisfy isSpace <?> "escaped white space"
+
+escapedBackslash :: Parser Char
+escapedBackslash = escapedSatisfy (== '\\') <?> "escaped backslash"
 
 escapedAnyOf :: [Char] -> Parser Char
 escapedAnyOf cs = escapedSatisfy (`elem` cs) <?> "escaped one of " <> cs
@@ -88,15 +80,8 @@ escapedSatisfy p = try $ string "\\" *> satisfy p
 anyToken :: Parser Char
 anyToken = satisfy $ const True
 
-nonSpaceNonReserved :: Parser Char
-nonSpaceNonReserved =
-  escapedSpace
-    <|> escapedAnyOf reserved
-    <|> satisfy (\c -> not $ isSpace c || isReserved c)
-    <?> "non white space / non reserved character"
-
-isReserved :: Char -> Bool
-isReserved = (`elem` reserved)
-
 reserved :: [Char]
 reserved = "();"
+
+quotes :: [Char]
+quotes = "\'\""
