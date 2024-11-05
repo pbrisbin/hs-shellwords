@@ -48,11 +48,7 @@ bare = some go
       <|> escapedAnyOf (reserved <> quotes)
       <|> satisfy
         ( \c ->
-            and
-              [ not $ isSpace c
-              , c `notElem` reserved
-              , c `notElem` quotes
-              ]
+            (not $ isSpace c) && (c `notElem` reserved) && (c `notElem` quotes)
         )
       <?> "non white space / non reserved character / non quote"
 
