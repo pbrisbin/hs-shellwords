@@ -1,5 +1,5 @@
 name: shellwords
-version: 0.1.3.1
+version: 0.1.3.2
 synopsis: Parse strings into words, like a shell would
 description: See https://github.com/pbrisbin/hs-shellwords#readme
 category: Text

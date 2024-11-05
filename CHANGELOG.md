@@ -1,6 +1,8 @@
-## [*Unreleased*](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.3.1...main)
+## [*Unreleased*](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.3.2...main)
 
-None
+## [v0.1.3.2](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.3.1...v0.1.3.2)
+
+- Fix bugs around `=` handling, adjacent strings, and escaped-backslash
 
 ## [v0.1.3.1](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.3.0...v0.1.3.1)
 
