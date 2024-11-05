@@ -43,8 +43,8 @@ bare :: Parser String
 bare = some go
  where
   go =
-    escapedSpace
-      <|> escapedBackslash
+    escaped '\\'
+      <|> escapedSpace
       <|> escapedAnyOf (reserved <> quotes)
       <|> satisfy ((&&) <$> not . isSpace <*> (`notElem` (reserved <> quotes)))
       <?> "non white space / non reserved character / non quote"
@@ -52,17 +52,14 @@ bare = some go
 -- | A balanced, single- or double-quoted string
 quoted :: Parser String
 quoted = do
-  q <- oneOf ['\'', '\"']
-  manyTill (escapedBackslash <|> escaped q <|> anyToken) $ char q
+  q <- oneOf quotes
+  manyTill (escaped '\\' <|> escaped q <|> anyToken) $ char q
 
 escaped :: Char -> Parser Char
 escaped c = c <$ (escapedSatisfy (== c) <?> "escaped" <> show c)
 
 escapedSpace :: Parser Char
 escapedSpace = escapedSatisfy isSpace <?> "escaped white space"
-
-escapedBackslash :: Parser Char
-escapedBackslash = escapedSatisfy (== '\\') <?> "escaped backslash"
 
 escapedAnyOf :: [Char] -> Parser Char
 escapedAnyOf cs = escapedSatisfy (`elem` cs) <?> "escaped one of " <> cs
