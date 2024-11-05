@@ -39,26 +39,12 @@ testCases =
   , ("var --bar=baz\\ bat", ["var", "--bar=baz bat"])
   , ("var --bar baz\\ bat", ["var", "--bar", "baz bat"])
   , -- N.B. sh preserves escapes in quoted values, python-shellwords does not.
-    -- we behave like sh in this regard. See omitted cases below too.
+    -- we behave like sh in this regard.
     ("var --bar 'baz\\ bat'", ["var", "--bar", "baz\\ bat"])
   , ("var  --bar \"baz\\ bat\"", ["var", "--bar", "baz\\ bat"])
+  , ("var \"--bar=\\\\'baz\\\\'\"", ["var", "--bar=\\'baz\\'"])
+  , ("var --bar='\\\\'", ["var", "--bar=\\"])
   ]
-
--- Omitted cases:
---
--- I think the Python test case is wrong here:
---
--- > sh-4.4$ shellwords() { printf ">%s<\n" "$@"; }
--- > sh-4.4$ shellwords var "--bar=\'baz\'"
--- > >var<
--- > >--bar=\'baz\'<
---
--- , ("var \"--bar=\\'baz\\'\"", ["var", "--bar='baz'"])
---
---
--- I can't get this one to work:
---
--- , ("var --bar='\\'", ["var", "--bar=\\"])
 
 errorCases :: [String]
 errorCases =
