@@ -28,7 +28,7 @@ parse :: String -> Either String [String]
 parse = runParser parser
 
 runParser :: Parser a -> String -> Either String a
-runParser p = first errorBundlePretty . Megaparsec.parse p "<input>"
+runParser p = first errorBundlePretty . Megaparsec.parse (p <* eof) "<input>"
 
 -- | Parse and return @'Text'@ values
 parseText :: Text -> Either String [Text]
