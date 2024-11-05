@@ -107,7 +107,7 @@ spec = describe "parser" $ do
       parseDelimited "echo \"hi\"" `shouldBeParsed` ["echo", "hi"]
 
     it "handles quoted delimiter" $ do
-      parseDelimited "echo \"hi (quietly)\")"
+      parseDelimited "echo \"hi (quietly)\""
         `shouldBeParsed` ["echo", "hi (quietly)"]
 
     it "works with white space" $ do
