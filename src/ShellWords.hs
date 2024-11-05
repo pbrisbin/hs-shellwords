@@ -46,16 +46,8 @@ bare = some go
     escapedSpace
       <|> escapedBackslash
       <|> escapedAnyOf (reserved <> quotes)
-      <|> satisfy
-        ( \c ->
-            and
-              [ not $ isSpace c
-              , c `notElem` reserved
-              , c `notElem` quotes
-              ]
-        )
+      <|> satisfy ((&&) <$> not . isSpace <*> (`notElem` (reserved <> quotes)))
       <?> "non white space / non reserved character / non quote"
-{-# ANN bare ("HLint: ignore Use &&" :: String) #-}
 
 -- | A balanced, single- or double-quoted string
 quoted :: Parser String
