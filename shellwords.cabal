@@ -28,6 +28,8 @@ source-repository head
 library
   exposed-modules:
       ShellWords
+      ShellWords.Parse
+      ShellWords.Quote
       Text.Megaparsec.Compat
   other-modules:
       Paths_shellwords
@@ -50,7 +52,8 @@ test-suite hspec
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      ShellWordsSpec
+      ShellWords.ParseSpec
+      ShellWords.QuoteSpec
       Paths_shellwords
   hs-source-dirs:
       test
