@@ -58,3 +58,5 @@ tests:
       - hspec
       - shellwords
       - megaparsec
+    build-tools:
+      - hspec-discover:hspec-discover
