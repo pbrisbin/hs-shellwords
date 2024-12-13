@@ -6,14 +6,14 @@
 -- Case-for-case port from Python:
 --
 -- <https://github.com/mozillazg/python-shellwords/blob/master/tests/test_shellwords.py>
-module ShellWordsSpec
+module ShellWords.ParseSpec
   ( spec
   ) where
 
 import Prelude hiding (truncate)
 
 import Data.Foldable (for_, traverse_)
-import ShellWords
+import ShellWords.Parse (runParser, parser)
 import Test.Hspec
 import Text.Megaparsec.Char (string)
 import Text.Megaparsec.Compat (between)
