@@ -1,7 +1,7 @@
 {-# LANGUAGE NamedFieldPuns #-}
 
 module ShellWords.Quote
-  (-- * Quoting for shells
+  ( -- * Quoting for shells
     quote
   , join
   ) where
@@ -18,8 +18,8 @@ data EscapeStyle
     Mixed
 
 -- | Internal state for `escapeStyle`.
-data EscapeStyleState =
-  EscapeStyleState
+data EscapeStyleState
+  = EscapeStyleState
   { hasSpecial :: Bool
   , hasNewline :: Bool
   , hasSingleQuote :: Bool

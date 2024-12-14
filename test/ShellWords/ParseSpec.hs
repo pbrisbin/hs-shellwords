@@ -13,7 +13,7 @@ module ShellWords.ParseSpec
 import Prelude hiding (truncate)
 
 import Data.Foldable (for_, traverse_)
-import ShellWords.Parse (runParser, parser)
+import ShellWords.Parse (parser, runParser)
 import Test.Hspec
 import Text.Megaparsec.Char (string)
 import Text.Megaparsec.Compat (between)

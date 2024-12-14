@@ -14,13 +14,13 @@ module ShellWords
   ) where
 
 import ShellWords.Parse
-    ( parse
-    , parseText
-    , Parser
-    , runParser
-    , parser
-    )
+  ( Parser
+  , parse
+  , parseText
+  , parser
+  , runParser
+  )
 import ShellWords.Quote
-    ( quote
-    , join
-    )
+  ( join
+  , quote
+  )
