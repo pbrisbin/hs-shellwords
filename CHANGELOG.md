@@ -1,4 +1,8 @@
-## [*Unreleased*](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.3.2...main)
+## [*Unreleased*](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.4.0...main)
+
+## [v0.1.4.0](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.3.2...v0.1.4.0)
+
+- Add `quote` and `join` ([@999years](https://github.com/pbrisbin/hs-shellwords/pull/11))
 
 ## [v0.1.3.2](https://github.com/pbrisbin/hs-shellwords/compare/v0.1.3.1...v0.1.3.2)
 
