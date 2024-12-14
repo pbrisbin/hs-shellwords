@@ -11,7 +11,7 @@ module ShellWords.QuoteSpec
 
 import Prelude hiding (truncate)
 
-import ShellWords.Quote (quote, join)
+import ShellWords.Quote (join, quote)
 import Test.Hspec
 
 spec :: Spec
