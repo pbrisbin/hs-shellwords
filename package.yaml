@@ -59,4 +59,4 @@ tests:
       - shellwords
       - megaparsec
     build-tools:
-      - hspec-discover:hspec-discover
+      - hspec-discover
