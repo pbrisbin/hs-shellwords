@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+version=$(./bin/verify-version "$1")
+
+if [[ "$version" != "$1" ]]; then
+  # suffix was stripped, must be -rc
+  echo "Releasing as candidate package"
+  stack --stack-yaml stack-lts12.yaml upload --candidate --pvp-bounds lower .
+else
+  stack --stack-yaml stack-lts12.yaml upload --pvp-bounds lower .
+fi
+
+cat <<EOM
+{
+  "name": "shellwords-$version",
+  "url": "https://hackage.haskell.org/package/shellwords-$version"
+}
+EOM

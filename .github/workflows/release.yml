@@ -2,22 +2,29 @@ name: Release
 
 on:
   push:
-    branches: main
-
-permissions:
-  contents: write
+    branches:
+      - main
+      - rc/*
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
-      - id: tag
-        uses: freckle/haskell-tag-action@v1
+      - id: token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.AUTOMATION_APP_ID }}
+          private-key: ${{ secrets.AUTOMATION_PRIVATE_KEY }}
 
-      - if: steps.tag.outputs.tag
-        run: stack upload --pvp-bounds lower .
+      - id: release
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          extra_plugins: |
+            @semantic-release/exec
         env:
+          GITHUB_TOKEN: ${{ steps.token.outputs.token }}
           HACKAGE_KEY: ${{ secrets.HACKAGE_API_KEY }}
-          STACK_YAML: stack-lts12.yaml
