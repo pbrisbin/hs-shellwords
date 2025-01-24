@@ -5,7 +5,7 @@ plugins:
   - "@semantic-release/release-notes-generator"
   - - "@semantic-release/github"
     - successCommentCondition: false
-      failureCommentCondition: false
+      failCommentCondition: false
   - - "@semantic-release/exec"
     - verifyConditionsCmd: "./bin/release verify"
       prepareCmd: "./bin/release prepare '0.${nextRelease.version}'"
