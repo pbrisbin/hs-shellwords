@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+version=$(./bin/verify-version "$1")
+
+echo "Updating package.yaml to $version"
+sed -i 's/^version: .*$/version: '"$version"'/' package.yaml
+stack build --dry-run # update .cabal
