@@ -37,11 +37,11 @@ publish() {
   url=https://hackage.haskell.org/package/$PACKAGE_NAME-$version
 
   if ((is_candidate)); then
-    echo stack upload . --pvp-bounds lower --candidate >&2
+    stack upload . --pvp-bounds lower --candidate >&2
     printf '{ "name": "%s v%s (candidate)", "url": "%s/candidate" }\n' \
       "$PACKAGE_NAME" "$version" "$url"
   else
-    echo stack upload . --pvp-bounds lower >&2
+    stack upload . --pvp-bounds lower >&2
     printf '{ "name": "%s v%s", "url": "%s" }\n' \
       "$PACKAGE_NAME" "$version" "$url"
   fi
