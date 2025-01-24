@@ -2,10 +2,14 @@
 set -euo pipefail
 
 version=$(./bin/verify-version "$1")
+name_suffix=
+url_suffix=
 
 if [[ "$version" != "$1" ]]; then
   # suffix was stripped, must be -rc
   echo "Releasing as candidate package"
+  name_suffix=" (candidate)"
+  url_suffix=/candidate
   stack --stack-yaml stack-lts12.yaml upload --candidate --pvp-bounds lower .
 else
   stack --stack-yaml stack-lts12.yaml upload --pvp-bounds lower .
@@ -13,7 +17,7 @@ fi
 
 cat <<EOM
 {
-  "name": "shellwords-$version",
-  "url": "https://hackage.haskell.org/package/shellwords-$version"
+  "name": "shellwords-$version$name_suffix",
+  "url": "https://hackage.haskell.org/package/shellwords-$version$url_suffix"
 }
 EOM
