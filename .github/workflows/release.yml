@@ -20,6 +20,11 @@ jobs:
           app-id: ${{ vars.AUTOMATION_APP_ID }}
           private-key: ${{ secrets.AUTOMATION_PRIVATE_KEY }}
 
+      - id: yq
+        uses: mikefarah/yq@v4.45.1
+        with:
+          cmd: yq eval '.name' package.yaml
+
       - id: release
         uses: cycjimmy/semantic-release-action@v4
         with:
@@ -28,5 +33,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.token.outputs.token }}
           HACKAGE_KEY: ${{ secrets.HACKAGE_API_KEY }}
-          PACKAGE_NAME: shellwords
+          PACKAGE_NAME: ${{ steps.yq.outputs.name }}
           STACK_YAML: stack-lts12.yaml # inform lower bounds
