@@ -3,7 +3,8 @@ tagFormat: "v0.${version}" # PVP prefixed
 plugins:
   - "@semantic-release/commit-analyzer"
   - "@semantic-release/release-notes-generator"
-  - "@semantic-release/github"
+  - - "@semantic-release/github"
+    - successCommentCondition: false
   - - "@semantic-release/exec"
     - verifyConditionsCmd: "test -n \"$HACKAGE_KEY\" || { echo \"HACKAGE_KEY must be set\"; exit 1; }"
       prepareCmd: "./bin/bump-version '0.${nextRelease.version}'"
