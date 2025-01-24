@@ -33,5 +33,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.token.outputs.token }}
           HACKAGE_KEY: ${{ secrets.HACKAGE_API_KEY }}
-          PACKAGE_NAME: ${{ steps.yq.outputs.name }}
+          PACKAGE_NAME: ${{ steps.yq.outputs.result }}
           STACK_YAML: stack-lts12.yaml # inform lower bounds
