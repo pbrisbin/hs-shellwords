@@ -20,18 +20,12 @@ jobs:
           app-id: ${{ vars.AUTOMATION_APP_ID }}
           private-key: ${{ secrets.AUTOMATION_PRIVATE_KEY }}
 
-      - id: yq
-        uses: mikefarah/yq@v4.45.1
-        with:
-          cmd: yq eval '.name' package.yaml
-
       - id: release
         uses: cycjimmy/semantic-release-action@v4
         with:
           extra_plugins: |
-            @semantic-release/exec
+            git+https://github.com/pbrisbin/semantic-release-hackage.git#pb/next
         env:
           GITHUB_TOKEN: ${{ steps.token.outputs.token }}
-          HACKAGE_KEY: ${{ secrets.HACKAGE_API_KEY }}
-          PACKAGE_NAME: ${{ steps.yq.outputs.result }}
-          STACK_YAML: stack-lts12.yaml # inform lower bounds
+          HACKAGE_TOKEN: ${{ secrets.HACKAGE_API_KEY }}
+          STACK_YAML: stack-lts12.yaml

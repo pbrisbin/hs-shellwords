@@ -6,10 +6,13 @@ plugins:
   - - "@semantic-release/github"
     - successCommentCondition: false
       failCommentCondition: false
-  - - "@semantic-release/exec"
-    - verifyConditionsCmd: "./bin/release verify"
-      prepareCmd: "./bin/release prepare '0.${nextRelease.version}'"
-      publishCmd: "./bin/release publish '0.${nextRelease.version}'"
+  - - "semantic-release-hackage"
+    - packageName: "shellwords"
+      versionPrefix: "0."
+      cabalCmd: stack
+      sdistOptions: >-
+        --pvp-bounds lower
+        --tar-dir dist-newstyle/sdist
 
 branches:
   - main
