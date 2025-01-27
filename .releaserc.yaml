@@ -6,12 +6,11 @@ plugins:
   - - "@semantic-release/github"
     - successCommentCondition: false
       failCommentCondition: false
-  - - "@semantic-release/exec"
-    - verifyConditionsCmd: "./bin/release verify"
-      prepareCmd: "./bin/release prepare '0.${nextRelease.version}'"
-      publishCmd: "./bin/release publish '0.${nextRelease.version}'"
+  - - "semantic-release-stack-upload"
+    - pvpBounds: lower
+      stripSuffix: true
 
 branches:
   - main
   - name: rc/*
-    prerelease: '${name.replace(/^rc\//g, "rc-")}'
+    prerelease: '${name.replace(/^rc\//, "rc-")}'
